@@ -208,6 +208,7 @@ A: No. All packages are isolated in `.venv/` and don't affect system Python.
 ## Technical Documentation
 
 For detailed architecture and implementation:
+- **Use Cases & Applications**: [`docs/use-cases.md`](docs/use-cases.md) - Real-world applications and AI-powered workflows
 - **Parallel Processing**: [`docs/parallel-processing.md`](docs/parallel-processing.md) - How parallel video processing works
 - **Technical Details**: [`docs/architecture.md`](docs/architecture.md) - System design and implementation
 - **AI Assistant Guide**: [`CLAUDE.md`](CLAUDE.md) - Quick reference for Claude Code
