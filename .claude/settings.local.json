@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(./gradlew clean:*)",
+      "Bash(chmod:*)",
+      "Bash(./transcribe.sh:*)",
+      "Bash(bash -n:*)",
+      "Bash(bash:*)",
+      "Bash(timeout 30 bash:*)",
+      "Bash(python3:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)"
+    ]
+  },
+  "sandbox": {
+    "autoAllowBashIfSandboxed": false,
+    "enabled": false
+  }
+}
