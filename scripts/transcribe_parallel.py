@@ -149,9 +149,17 @@ def transcribe_chunk(chunk_num, chunk_file, output_dir, model_size="base", lang_
         # Transcribe with verbose=True to enable progress tracking
         # Pass None for language if auto-detect is requested
         whisper_lang = None if lang_code == "auto" else lang_code
+
+        # Use initial_prompt to force Devanagari script for Hindi
+        # This prevents Whisper from outputting Urdu script
+        initial_prompt = None
+        if lang_code == "hi":
+            initial_prompt = "नमस्ते, यह एक हिंदी ऑडियो है।"
+
         result = model.transcribe(
             str(chunk_file),
             language=whisper_lang,
+            initial_prompt=initial_prompt,
             verbose=True,  # Enable Whisper's progress (will be captured by our custom tqdm)
             fp16=False  # Disable FP16 since it's not supported on CPU
         )
@@ -616,33 +624,67 @@ def main():
         print()
 
         # Interactive model selection
-        print("Available Whisper models:")
-        model_info = {
-            "tiny": "Fastest (low accuracy) - ~39M parameters",
-            "base": "Fast (good accuracy) - ~74M parameters [DEFAULT]",
-            "small": "Balanced (high accuracy) - ~244M parameters",
-            "medium": "Accurate (very high accuracy) - ~769M parameters",
-            "large": "Most accurate (slowest) - ~1.5B parameters"
-        }
+        # For Hindi, only show medium and large models (smaller models output Urdu script)
+        if lang_code == "hi":
+            print("⚠️  Important: Smaller Whisper models (tiny, base, small) output Urdu script")
+            print("instead of Devanagari for Hindi. Only medium and large models are supported.")
+            print()
+            print("Available Whisper models for Hindi:")
+            model_info_hindi = {
+                "medium": "Accurate (very high accuracy) - ~769M parameters",
+                "large": "Most accurate (slowest) - ~1.5B parameters [RECOMMENDED]"
+            }
 
-        for i, (model, info) in enumerate(model_info.items(), 1):
-            print(f"{i}) {model.capitalize():8} - {info}")
+            for i, (model, info) in enumerate(model_info_hindi.items(), 1):
+                print(f"{i}) {model.capitalize():8} - {info}")
 
-        print()
-        while True:
-            model_choice = input("Select model (1-5, default: 2): ").strip()
-            if not model_choice:
-                model_size = "base"
-                break
-            try:
-                choice_idx = int(model_choice) - 1
-                if 0 <= choice_idx < len(valid_models):
-                    model_size = valid_models[choice_idx]
+            print()
+            while True:
+                model_choice = input("Select model (1-2, default: 2): ").strip()
+                if not model_choice:
+                    model_size = "large"
                     break
-                else:
-                    print("Error: Please enter a number between 1 and 5")
-            except ValueError:
-                print("Error: Please enter a valid number")
+                try:
+                    choice_idx = int(model_choice)
+                    if choice_idx == 1:
+                        model_size = "medium"
+                        break
+                    elif choice_idx == 2:
+                        model_size = "large"
+                        break
+                    else:
+                        print("Error: Please enter 1 or 2")
+                except ValueError:
+                    print("Error: Please enter a valid number")
+        else:
+            # For other languages, show all models
+            print("Available Whisper models:")
+            model_info = {
+                "tiny": "Fastest (low accuracy) - ~39M parameters",
+                "base": "Fast (good accuracy) - ~74M parameters [DEFAULT]",
+                "small": "Balanced (high accuracy) - ~244M parameters",
+                "medium": "Accurate (very high accuracy) - ~769M parameters",
+                "large": "Most accurate (slowest) - ~1.5B parameters"
+            }
+
+            for i, (model, info) in enumerate(model_info.items(), 1):
+                print(f"{i}) {model.capitalize():8} - {info}")
+
+            print()
+            while True:
+                model_choice = input("Select model (1-5, default: 2): ").strip()
+                if not model_choice:
+                    model_size = "base"
+                    break
+                try:
+                    choice_idx = int(model_choice) - 1
+                    if 0 <= choice_idx < len(valid_models):
+                        model_size = valid_models[choice_idx]
+                        break
+                    else:
+                        print("Error: Please enter a number between 1 and 5")
+                except ValueError:
+                    print("Error: Please enter a valid number")
 
         print()
 
