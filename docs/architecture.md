@@ -49,10 +49,15 @@ FastScribe uses **true parallel processing** to transcribe videos faster by spli
 ## Recent Improvements
 
 **Latest updates** (October 2025):
+
 1. ✅ **Real Progress Tracking**: Captures actual Whisper frame counts instead of simulated progress
+
 2. ✅ **Parallelized Video Splitting**: FFmpeg chunk creation now runs in parallel (2-3x faster)
+
 3. ✅ **Dynamic Process Staggering**: Each chunk waits for previous one to reach 2% before loading model (prevents UI freeze)
+
 4. ✅ **Graceful Interrupt Handling**: Clean shutdown on Ctrl+C - terminates processes, removes temp files, no semaphore leaks
+
 5. ✅ **Language Selection**: Support for English, Hindi, and auto-detect with interactive prompts and CLI args
 
 ## Core Components
@@ -715,28 +720,43 @@ Replace `executor.submit(transcribe_chunk, ...)` with `executor.submit(transcrib
 ### Recently Implemented ✅
 
 1. ✅ **Real Progress Tracking**: Shows actual Whisper frame counts (Oct 2025)
+
 2. ✅ **Parallelized Video Splitting**: ThreadPoolExecutor for FFmpeg (Oct 2025)
+
 3. ✅ **Dynamic Process Staggering**: Adaptive 2% threshold approach (Oct 2025)
+
 4. ✅ **Graceful Interrupt Handling**: Clean Ctrl+C shutdown (Oct 2025)
 
 ### Potential Enhancements
 
 1. **GPU Support**: Detect CUDA/MPS and enable `fp16=True` for 2x speedup
+
 2. **Adaptive Chunking**: Automatically adjust chunk count based on available RAM
+
 3. **Resume Capability**: Save checkpoint to resume interrupted transcriptions
+
 4. **Batch Processing**: Queue multiple videos and process sequentially
+
 5. **Web Interface**: Flask/FastAPI frontend for easier use
+
 6. **Output Formats**: Support SRT, VTT, JSON with timestamps
+
 7. **Configurable Stagger Threshold**: Make the 2% threshold adjustable via CLI arg
+
 8. **Expanded Language Support**: Add more pre-configured language options beyond English and Hindi
 
 ### Known Limitations
 
 1. **No Timestamps**: Output is plain text, no segment timing
+
 2. **No Speaker Diarization**: Can't distinguish between different speakers
+
 3. **CPU Only**: Doesn't utilize GPU even if available
+
 4. **MP4 Focus**: Other formats work but less tested
+
 5. **Fixed 2% Stagger**: Threshold not configurable (works well in practice)
+
 6. **Limited Pre-configured Languages**: Only English and Hindi have dedicated options (use auto-detect for others)
 
 ---

@@ -5,11 +5,17 @@ Fast parallel video-to-text transcription powered by OpenAI's Whisper AI.
 ## Features
 
 ✓ **Fast Parallel Processing** - Split videos into chunks for 2-4x faster transcription
+
 ✓ **Real-Time Progress** - See actual transcription progress for all parallel processes
+
 ✓ **Multiple Languages** - English, Hindi, or auto-detect
+
 ✓ **Multiple Models** - Choose from 5 Whisper models (speed vs accuracy)
+
 ✓ **Many Formats** - Supports mp4, mov, avi, mkv, mp3, wav, m4a, flac, and more
+
 ✓ **Isolated Environment** - All dependencies in `.venv/` folder
+
 ✓ **Clean Uninstall** - Remove everything by deleting `.venv/` folder
 
 ## Quick Start
@@ -184,15 +190,19 @@ brew uninstall ffmpeg
 ## FAQ
 
 **Q: Can I transcribe languages other than English and Hindi?**
+
 A: Yes! Use `--lang auto` and Whisper will auto-detect the language. For best results with a specific language, you can modify the code (see `docs/architecture.md`).
 
 **Q: Can I get timestamps with the transcription?**
+
 A: Not yet. Output is plain text.
 
 **Q: How much faster is parallel processing?**
+
 A: Typically 2-3x faster with 4 chunks on modern CPUs.
 
 **Q: Will this interfere with my other Python projects?**
+
 A: No. All packages are isolated in `.venv/` and don't affect system Python.
 
 ## Technical Documentation
