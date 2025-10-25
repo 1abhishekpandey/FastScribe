@@ -1,0 +1,9 @@
+openai-whisper==20250625
+torch
+numpy
+tqdm
+requests
+regex
+tiktoken
+numba
+more-itertools
