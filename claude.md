@@ -19,7 +19,7 @@ python3 transcribe.py --default
 # Custom run
 python3 transcribe.py --threads 4 --model 3 --lang auto
 
-# Interactive mode (prompts for settings)
+# Interactive mode (prompts for settings + YouTube URL support)
 python3 transcribe.py
 ```
 
@@ -93,38 +93,52 @@ FastScribe/
 
 ## Typical User Workflow
 
+### Local Video Files
 1. Place videos in `input/`
 2. Run `python3 transcribe.py --default`
 3. Watch progress bars
 4. Find transcripts in `output/`
 
+### YouTube Videos (NEW)
+1. Run `python3 transcribe.py` (interactive mode)
+2. Select "2) YouTube URL"
+3. Choose language
+4. Paste YouTube URL
+5. Get instant transcript if subtitles available
+
 ## Notes
 
 - Videos split into chunks and processed in parallel
-- Language selection appears first in interactive mode
+- **Interactive mode now supports YouTube URLs directly** - no need to use extension separately
+- Source selection (input folder vs YouTube) appears first in interactive mode
 - Auto-detect lets Whisper choose the language
 - All dependencies isolated in `.venv/`
 - Models cached globally in `~/.cache/whisper/`
 
-## Extensions
+## YouTube Integration
 
-### YouTube Subtitles
+### Integrated Support (Recommended)
 
-Extract existing captions from YouTube videos without transcription (instant results).
+**YouTube URLs are now integrated into the main transcribe.py workflow:**
 
-**Quick command:**
+```bash
+# Run interactive mode
+python3 transcribe.py
+
+# Then select:
+# 1) Input folder (local videos) → Whisper transcription
+# 2) YouTube URL → Instant subtitle extraction
+```
+
+**When YouTube subtitles are available:** Instant extraction (< 5 seconds)
+**When YouTube subtitles are NOT available:** Shows error with instructions to use Whisper
+
+### Standalone Extension (Alternative)
+
+For direct YouTube subtitle extraction without interactive prompts:
+
 ```bash
 python3 extensions/youtube-subtitles/youtube_subs.py <youtube-url> --lang en
 ```
-
-**When to use:**
-- Video already has captions (auto-generated or manual)
-- Need instant results without processing time
-- Want to check if transcription is necessary
-
-**When to use main FastScribe instead:**
-- No subtitles available on YouTube
-- Need higher accuracy than auto-generated captions
-- Processing local video files
 
 **See:** `extensions/youtube-subtitles/CLAUDE.md` for detailed reference

@@ -22,22 +22,33 @@ Fast parallel video-to-text transcription powered by OpenAI's Whisper AI.
 
 ## Quick Start
 
+### Local Videos
+
 ```bash
 # 1. Install FFmpeg (one-time)
 brew install ffmpeg
 
-# 2. Set up Python environment (creates input/ and output/ folders)
+# 2. Set up Python environment
 python3 setup.py
 
-# 3. Place your video files in the input/ folder
+# 3. Place videos in input/ folder
 
-# 4. Transcribe your videos
+# 4. Transcribe
 python3 transcribe.py --default
 ```
 
-Done! Find your transcripts in the `output/` folder as `.txt` files.
+### YouTube Videos
 
-**Note**: The setup script automatically creates `input/` and `output/` folders for you.
+```bash
+# 1-2. Same setup as above
+
+# 3. Run interactive mode
+python3 transcribe.py
+
+# 4. Select "YouTube URL" option and paste link
+```
+
+Done! Find your transcripts in the `output/` folder as `.txt` files.
 
 ## Requirements
 
@@ -72,26 +83,35 @@ This creates:
 
 ## Usage
 
-### Basic Usage
+### Local Videos (Input Folder)
 
 ```bash
+# Quick start with defaults (English, base model, 2 threads)
 python3 transcribe.py --default
+
+# Custom settings
+python3 transcribe.py --threads 4 --model 4 --lang hi
 ```
 
-Uses defaults: English, base model, 2 parallel threads.
-
-### Custom Settings
+### YouTube Videos
 
 ```bash
-# 4 threads, medium model, Hindi
-python3 transcribe.py --threads 4 --model 4 --lang hi
-
-# Auto-detect language
-python3 transcribe.py --lang auto
-
-# Interactive mode (prompts for all settings)
+# Interactive mode with YouTube support
 python3 transcribe.py
+
+# Then select:
+# Option 2: YouTube URL
+# Enter language and paste video URL
+# Get instant transcript if subtitles available
 ```
+
+**When to use YouTube mode:**
+- Video has existing subtitles (instant results)
+- Want to avoid processing time
+
+**When to use local files:**
+- No subtitles available
+- Need higher accuracy than auto-generated captions
 
 ### Command-Line Options
 
@@ -124,10 +144,17 @@ python3 transcribe.py
 
 ## Workflow
 
+### For Local Videos
 1. **Place videos** in `input/` folder
 2. **Run** `python3 transcribe.py --default`
 3. **Watch** coordinated progress bars for each chunk
-4. **Find transcripts** in `output/` folder as `.txt` files
+4. **Find transcripts** in `output/` folder
+
+### For YouTube Videos
+1. **Run** `python3 transcribe.py` (interactive mode)
+2. **Select** "YouTube URL" option
+3. **Choose** language and paste URL
+4. **Get** instant transcript in `output/` folder
 
 ### Progress Display
 
@@ -147,29 +174,29 @@ Each chunk shows percentage, time elapsed, and time remaining.
 **Video**: mp4, mov, avi, mkv, flv, wmv
 **Audio**: mp3, wav, m4a, flac, ogg, aac
 
-## YouTube Subtitle Extraction
+## YouTube Integration
 
-Extract existing subtitles from YouTube videos instantly (no transcription needed):
+### Built-in Support (Recommended)
+
+Extract YouTube subtitles directly through interactive mode:
 
 ```bash
-# Install dependency (one-time)
-source .venv/bin/activate
-pip install youtube-transcript-api
+python3 transcribe.py
 
-# Extract English subtitles
-python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --lang en
-
-# Extract Hindi subtitles
-python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --lang hi
-
-# Check available languages
-python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --list-languages
+# Select: 2) YouTube URL
+# Choose language, paste URL
+# Done - instant extraction!
 ```
 
-**When to use:**
-- Video already has captions (auto-generated or manual)
-- You need instant results
-- You want to avoid transcription processing time
+### Standalone Tool (Alternative)
+
+Direct extraction without interactive prompts:
+
+```bash
+python3 extensions/youtube-subtitles/youtube_subs.py <URL> --lang en
+```
+
+**Subtitle unavailable?** The tool will show an error with instructions to download the video and use Whisper transcription instead.
 
 **For full documentation:** See [`docs/youtube-subtitles.md`](docs/youtube-subtitles.md)
 

@@ -20,6 +20,18 @@ import threading
 import whisper
 from tqdm import tqdm
 
+# Import YouTube subtitle extraction functions
+script_dir = Path(__file__).parent.parent.absolute()
+youtube_ext_path = script_dir / "extensions" / "youtube-subtitles"
+if str(youtube_ext_path) not in sys.path:
+    sys.path.insert(0, str(youtube_ext_path))
+
+try:
+    from youtube_subtitles import extract_video_id, extract_subtitles, get_available_languages
+    YOUTUBE_EXTENSION_AVAILABLE = True
+except ImportError:
+    YOUTUBE_EXTENSION_AVAILABLE = False
+
 # Force unbuffered output so progress bars from child processes display properly
 os.environ['PYTHONUNBUFFERED'] = '1'
 
@@ -549,6 +561,74 @@ class VideoTranscriber:
         print(f"Output saved to: {self.output_dir}")
         print("=" * 50)
 
+def is_youtube_url(input_str):
+    """Check if input string is a YouTube URL."""
+    youtube_patterns = [
+        r'(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})',
+    ]
+    return any(re.search(pattern, input_str) for pattern in youtube_patterns)
+
+def handle_youtube_url(url, lang_code, output_dir):
+    """Handle YouTube subtitle extraction."""
+    if not YOUTUBE_EXTENSION_AVAILABLE:
+        print()
+        print("Error: YouTube extension is not available.")
+        print("Please ensure youtube-transcript-api is installed.")
+        print()
+        return False
+
+    print()
+    print("=" * 50)
+    print("YouTube Subtitle Extraction")
+    print("=" * 50)
+    print()
+
+    # Extract video ID
+    video_id = extract_video_id(url)
+    if not video_id:
+        print(f"Error: Invalid YouTube URL: {url}")
+        print()
+        return False
+
+    print(f"Video ID: {video_id}")
+    print(f"Language: {lang_code}")
+    print()
+
+    try:
+        # Extract subtitles
+        print("Extracting subtitles from YouTube...")
+        output_path = extract_subtitles(url, output_dir, lang_code)
+
+        print()
+        print("✓ Success! Subtitles extracted")
+        print(f"Output: {output_path}")
+        print()
+
+        # Show file stats
+        file_size = os.path.getsize(output_path)
+        with open(output_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            word_count = len(content.split())
+
+        print(f"File size: {file_size:,} bytes")
+        print(f"Word count: {word_count:,}")
+        print()
+        print("=" * 50)
+
+        return True
+
+    except Exception as e:
+        print()
+        print(f"✗ Error: {str(e)}")
+        print()
+        print("Note: If subtitles are not available, you can:")
+        print("1. Download the video manually")
+        print("2. Place it in the input/ folder")
+        print("3. Run transcribe.py to process with Whisper")
+        print()
+        print("=" * 50)
+        return False
+
 def main():
     """Entry point."""
     valid_models = ["tiny", "base", "small", "medium", "large"]
@@ -577,7 +657,75 @@ def main():
         print("Using default settings: English, Model: base, Threads: 2")
         print()
     else:
-        # Interactive language selection (asked first)
+        # Interactive source selection (asked first)
+        print("Process video from:")
+        print("1) Input folder (process local videos)")
+        print("2) YouTube URL (extract subtitles)")
+        print()
+
+        source_choice = None
+        while True:
+            source_input = input("Select source (1-2, default: 1): ").strip()
+            if not source_input:
+                source_choice = 1
+                break
+            try:
+                source_choice = int(source_input)
+                if source_choice in [1, 2]:
+                    break
+                else:
+                    print("Error: Please enter 1 or 2")
+            except ValueError:
+                print("Error: Please enter a valid number")
+
+        print()
+
+        # If YouTube URL selected, handle it and exit
+        if source_choice == 2:
+            # Interactive language selection for YouTube
+            print("Available languages:")
+            print("1) English [DEFAULT]")
+            print("2) Hindi")
+            print("3) Auto-detect")
+            print()
+
+            lang_code = "en"
+            while True:
+                lang_choice = input("Select language (1-3, default: 1): ").strip()
+                if not lang_choice:
+                    lang_code = "en"
+                    break
+                try:
+                    lang_idx = int(lang_choice)
+                    if lang_idx == 1:
+                        lang_code = "en"
+                        break
+                    elif lang_idx == 2:
+                        lang_code = "hi"
+                        break
+                    elif lang_idx == 3:
+                        lang_code = "auto"
+                        break
+                    else:
+                        print("Error: Please enter 1, 2, or 3")
+                except ValueError:
+                    print("Error: Please enter a valid number")
+
+            print()
+
+            # Prompt for YouTube URL
+            youtube_url = input("Enter YouTube URL: ").strip()
+
+            if not youtube_url:
+                print("Error: YouTube URL is required")
+                return
+
+            # Handle YouTube URL extraction
+            output_dir = str(Path(__file__).parent.parent.absolute() / "output")
+            handle_youtube_url(youtube_url, lang_code, output_dir)
+            return
+
+        # Continue with input folder processing - Interactive language selection (asked first)
         print("Available languages:")
         print("1) English [DEFAULT]")
         print("2) Hindi")
