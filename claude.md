@@ -39,8 +39,14 @@ FastScribe/
 ├── scripts/            # Python code
 │   ├── transcribe_parallel.py  # Core transcription engine
 │   └── requirements.txt        # Dependencies
+├── extensions/         # Additional features
+│   └── youtube-subtitles/      # YouTube caption extraction
+│       ├── CLAUDE.md           # Extension reference
+│       ├── youtube_subs.py     # CLI entry point
+│       └── youtube_subtitles.py # Core module
 └── docs/
-    └── architecture.md # Technical details
+    ├── architecture.md         # Technical details
+    └── youtube-subtitles.md    # YouTube extension docs
 ```
 
 ## CLI Options
@@ -99,3 +105,26 @@ FastScribe/
 - Auto-detect lets Whisper choose the language
 - All dependencies isolated in `.venv/`
 - Models cached globally in `~/.cache/whisper/`
+
+## Extensions
+
+### YouTube Subtitles
+
+Extract existing captions from YouTube videos without transcription (instant results).
+
+**Quick command:**
+```bash
+python3 extensions/youtube-subtitles/youtube_subs.py <youtube-url> --lang en
+```
+
+**When to use:**
+- Video already has captions (auto-generated or manual)
+- Need instant results without processing time
+- Want to check if transcription is necessary
+
+**When to use main FastScribe instead:**
+- No subtitles available on YouTube
+- Need higher accuracy than auto-generated captions
+- Processing local video files
+
+**See:** `extensions/youtube-subtitles/CLAUDE.md` for detailed reference

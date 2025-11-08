@@ -13,7 +13,9 @@
       "Bash(timeout 30 bash:*)",
       "Bash(python3:*)",
       "Bash(cat:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(git mv:*)"
     ]
   },
   "sandbox": {

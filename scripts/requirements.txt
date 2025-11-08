@@ -7,3 +7,4 @@ regex
 tiktoken
 numba
 more-itertools
+youtube-transcript-api

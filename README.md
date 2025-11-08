@@ -14,6 +14,8 @@ Fast parallel video-to-text transcription powered by OpenAI's Whisper AI.
 
 ✓ **Many Formats** - Supports mp4, mov, avi, mkv, mp3, wav, m4a, flac, and more
 
+✓ **YouTube Subtitle Extraction** - Instantly extract existing captions from YouTube videos
+
 ✓ **Isolated Environment** - All dependencies in `.venv/` folder
 
 ✓ **Clean Uninstall** - Remove everything by deleting `.venv/` folder
@@ -145,6 +147,32 @@ Each chunk shows percentage, time elapsed, and time remaining.
 **Video**: mp4, mov, avi, mkv, flv, wmv
 **Audio**: mp3, wav, m4a, flac, ogg, aac
 
+## YouTube Subtitle Extraction
+
+Extract existing subtitles from YouTube videos instantly (no transcription needed):
+
+```bash
+# Install dependency (one-time)
+source .venv/bin/activate
+pip install youtube-transcript-api
+
+# Extract English subtitles
+python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --lang en
+
+# Extract Hindi subtitles
+python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --lang hi
+
+# Check available languages
+python3 extensions/youtube-subtitles/youtube_subs.py https://www.youtube.com/watch?v=VIDEO_ID --list-languages
+```
+
+**When to use:**
+- Video already has captions (auto-generated or manual)
+- You need instant results
+- You want to avoid transcription processing time
+
+**For full documentation:** See [`docs/youtube-subtitles.md`](docs/youtube-subtitles.md)
+
 ## Performance Tips
 
 **Parallel Processing:**
@@ -209,6 +237,7 @@ A: No. All packages are isolated in `.venv/` and don't affect system Python.
 
 For detailed architecture and implementation:
 - **Use Cases & Applications**: [`docs/use-cases.md`](docs/use-cases.md) - Real-world applications and AI-powered workflows
+- **YouTube Subtitle Extraction**: [`docs/youtube-subtitles.md`](docs/youtube-subtitles.md) - Extract existing captions from YouTube videos
 - **Parallel Processing**: [`docs/parallel-processing.md`](docs/parallel-processing.md) - How parallel video processing works
 - **Technical Details**: [`docs/architecture.md`](docs/architecture.md) - System design and implementation
 - **AI Assistant Guide**: [`CLAUDE.md`](CLAUDE.md) - Quick reference for Claude Code
