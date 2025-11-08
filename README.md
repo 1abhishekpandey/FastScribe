@@ -2,6 +2,8 @@
 
 Fast parallel video-to-text transcription powered by OpenAI's Whisper AI.
 
+**Check out this:** [TranscriptAI](https://github.com/1abhishekpandey/TranscriptAI) - A modern Android application that enables seamless YouTube video transcript extraction and AI-powered analysis. Download subtitles, view them instantly, and export to your favorite AI platforms.
+
 ## Features
 
 ✓ **Fast Parallel Processing** - Split videos into chunks for 2-4x faster transcription
